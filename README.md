@@ -1,5 +1,5 @@
-TO-DO:
---> fix up .h structure, hence add extern to global var FILE
+# TO-DO:
+--> fix headers and includes to make new makefile compile the code
 
 --> put output data into bin, source data into src
 
