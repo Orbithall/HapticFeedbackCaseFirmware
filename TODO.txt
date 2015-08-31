@@ -1,8 +1,0 @@
---> fix up .h structure, hence add extern to global var FILE
---> put output data into bin, source data into src
---> add rx to change between 1 sensor and all sensors on tx, & to turn all sensors off (new state in FSM + boolean for each sensor, if true for sensor n, then tx)
---> test rx with computer terminal 
---> Add varying sleep states i.e. when all sensors are off sleep
---> adapt app 
---> refactor app 
---> look into making a service
