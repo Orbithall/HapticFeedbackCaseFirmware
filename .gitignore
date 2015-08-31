@@ -32,9 +32,7 @@
 *.dSYM/
 
 #Backup folder
-/Backup/*
 Backup/*
 
 #Output folder
-/outputs/*
 outputs/*
