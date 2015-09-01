@@ -1,4 +1,4 @@
-# HapticFeedbackCaseFirmware
+## Haptic Feedback Case: The Firmware
 Firmware for the haptic feedback case to be programmed to board rev.10
 
 Use the makefile to clean/build/program the code to the microcontroller. 
