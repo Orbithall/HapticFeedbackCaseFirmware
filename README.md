@@ -1,4 +1,6 @@
 ## Haptic Feedback Case: The Firmware
+> The haptic feedback case is a shell that attaches to most modern android phones, it interfaces the user through positional and pressure input on the sides and rear of their device.   
+
 Firmware for the haptic feedback case to be programmed to board rev.10
 
 Use the makefile to clean/build/program the code to the microcontroller. 
