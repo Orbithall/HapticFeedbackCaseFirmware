@@ -9,11 +9,11 @@
 
 --> Add varying sleep states i.e. when all sensors are off sleep
 
---> adapt app 
+--> (Android App) adapt app 
 
---> refactor app 
+--> (Android App) refactor app 
 
---> look into making a service
+--> (Android App) look into making a service
 
 # HapticFeedbackCaseFirmware
 Firmware for the haptic feedback case to be programmed to board rev.10
