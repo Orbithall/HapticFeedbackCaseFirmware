@@ -3,17 +3,12 @@
 
 > This firmware is to be programmed to the rev.10 board designed and developed by Ben Kazemi. 
 
-Use the makefile to clean/build/program the code to the microcontroller. 
-
-The makefile is configurated to use an arduino as the ISP.
-
 ## Dependencies
-- WinAVR or derivative
-- - avr-gcc
-- - avrdude
+- WinAVR or derivative package to build .hex
+- avrdude or alternative to program .hex 
 
 ## Build
-Currently the makefile is defined to program the board via ArduinoISP.
+Currently the makefile is defined to program the board via ArduinoISP, and must have the communication port configured appropriately. 
 
 `make clean && make && make program`
 
