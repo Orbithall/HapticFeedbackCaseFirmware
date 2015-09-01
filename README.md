@@ -10,9 +10,10 @@
 ## Build
 The makefile is currently defined to program the board via ArduinoISP, and must have the communication port configured appropriately. 
 
-`make clean`
-`make`
-`make program`
+```fuck
+make clean
+make 
+make program```
 
 ## TODO List:
 - [ ] fix headers and includes to make new makefile compile the code
