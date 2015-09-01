@@ -7,10 +7,15 @@ Use the makefile to clean/build/program the code to the microcontroller.
 
 The makefile is configurated to use an arduino as the ISP.
 
-## Build
-Currently the makefile is defined to program via ArduinoISP.
+## Dependencies
+- WinAVR or derivative
+- - avr-gcc
+- - avrdude
 
-``make clean && make && make program``
+## Build
+Currently the makefile is defined to program the board via ArduinoISP.
+
+`make clean && make && make program`
 
 ## TODO List:
 - [ ] fix headers and includes to make new makefile compile the code
