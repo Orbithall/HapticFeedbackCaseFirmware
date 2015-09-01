@@ -8,7 +8,7 @@
 - avrdude or alternative to program .hex 
 
 ## Build
-Currently the makefile is defined to program the board via ArduinoISP, and must have the communication port configured appropriately. 
+The makefile is currently defined to program the board via ArduinoISP, and must have the communication port configured appropriately. 
 
 `make clean && make && make program`
 
