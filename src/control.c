@@ -1,24 +1,18 @@
 /*
-   Haptic Feedback Case - Firmware
-   Copyright (C) 2015: Ben Kazemi, ben.kazemi@gmail.com
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 3
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+    Copyright (C) 2009:
+   		 Ben Kazemi, ben.kazemi@gmail.com
 */
 
 #include "control.h"
-   		 
+#include "global.h"
+#include "serial.h"
+#include "helper.h"
+#include "adc.h"
+#include <avr/io.h>
+#include <stdio.h>
+#include <util/delay.h>
+#include <avr/pgmspace.h>
+
 static void controlShiftColSet(uint8_t); 
 static void controlSetRowMuxSelectors(const uint8_t *);
 static void controlSendCompressed(const uint8_t);
@@ -26,28 +20,40 @@ static void controlClear(volatile uint8_t *);
 static uint8_t controlGetForce(volatile uint8_t *);
 static uint8_t controlGetPosition(volatile uint8_t *);
 
-uint8_t compressed_zero_count = 0; 
 
-uint8_t sideStrip PROGMEM = { 
+uint8_t compressed_zero_count = 0;
+
+/*
+Following holds data for *each* side strip in the following *ordered* structure:
+	0: FSLP#(silkscreen); 
+	1: Terminal1; 
+	2: Res; 
+	3: Terminal2; 
+	4: Terminal3; 
+	5: Terminal1ADC;
+*/
+uint8_t sideStrip[4][6] PROGMEM = { 
 								   {1,0,1,2,3,0b00100000},
 								   {2,4,5,6,7,0b00100100},
 								   {3,0,1,2,3,0b00000000},
-								   {4,4,5,5,6,0b00000100} 	//res#4 is on portL, rest is on PORTF  
+								   {4,4,5,5,6,0b00000100} 	//res#4 is on portL, rest is on PORTF 
 								};  
 
-uint16_t *sidePorts PROGMEM = { 
+volatile uint8_t *sidePorts[4][15] PROGMEM = { 
 									{&DDRK, &PORTK, &DDRK, &PORTK, &DDRK, &PORTK, &DDRK, &PORTK, &DDRK, &PORTK, &DDRK, &PORTK, &DDRK, &PORTK, &DDRK},
 									{&DDRK, &PORTK, &DDRK, &PORTK, &DDRK, &PORTK, &DDRK, &PORTK, &DDRK, &PORTK, &DDRK, &PORTK, &DDRK, &PORTK, &DDRK},
 								    {&DDRF, &PORTF, &DDRF, &PORTF, &DDRF, &PORTF, &DDRF, &PORTF, &DDRF, &PORTF, &DDRF, &PORTF, &DDRF, &PORTF, &DDRF},
-								    {&DDRF, &PORTF, &DDRL, &PORTL, &DDRF, &PORTF, &DDRL, &PORTL, &DDRL, &PORTL, &DDRF, &PORTF, &DDRF, &PORTF, &DDRF}
-								  };
+								    {&DDRF, &PORTF, &DDRL, &PORTL, &DDRF, &PORTF, &DDRF, &PORTF, &DDRF, &PORTF, &DDRL, &PORTL, &DDRL, &PORTL, &DDRF}
+								  }; 
 
-uint16_t *sidePortClear PROGMEM = { 
+volatile uint8_t *sidePortClear[4][8] PROGMEM = { 
 										{&DDRK,&DDRK,&DDRK,&DDRK,&PORTK,&PORTK,&PORTK,&PORTK},
 										{&DDRK,&DDRK,&DDRK,&DDRK,&PORTK,&PORTK,&PORTK,&PORTK},
 										{&DDRF,&DDRF,&DDRF,&DDRF,&PORTF,&PORTF,&PORTF,&PORTF},
 										{&DDRF,&DDRL,&DDRF,&DDRF,&PORTF,&PORTL,&PORTF,&PORTF}
 									 };
+									 
+
 /*
  *	ripple a 1 through all the columns in sequence 
  */
@@ -177,7 +183,7 @@ static uint8_t controlGetPosition(volatile uint8_t *sensor) {
 }
 
 void controlGetStrip(volatile uint8_t *sensor) {
-	int force = controlGetForce(sensor);
+	uint8_t force = controlGetForce(sensor);
 	if (force < CONTROL_MIN_SEND_VALUE)  // false position reading if no touch actuation 
 	{
 		uart0_fputchar_int(0,&uart_str);
@@ -186,10 +192,8 @@ void controlGetStrip(volatile uint8_t *sensor) {
 	else 
 	{
 		(force > CONTROL_MAX_SEND_VALUE) ? uart0_fputchar_int(CONTROL_MAX_SEND_VALUE,&uart_str) : uart0_fputchar_int(force,&uart_str);
-		// don't go over 254 - leave 255 for the matrix break/restart
 		controlClear(sensor);
-		int position = controlGetPosition(sensor);  
+		uint8_t position = controlGetPosition(sensor);  
 		(position > CONTROL_MAX_SEND_VALUE) ? uart0_fputchar_int(CONTROL_MAX_SEND_VALUE,&uart_str) : uart0_fputchar_int(position,&uart_str);
-		// don't go over 254 - leave 255 for the matrix break/restart
 	}
 }

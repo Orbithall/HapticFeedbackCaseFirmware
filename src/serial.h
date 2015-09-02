@@ -21,11 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef __SERIAL_H
 #define __SERIAL_H
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <avr/sfr_defs.h>
-#include <stdlib.h>
-#include <string.h>
 #include <stdio.h>
 
 volatile struct SerialData SerialData0;

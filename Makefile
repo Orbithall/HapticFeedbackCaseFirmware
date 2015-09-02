@@ -39,7 +39,7 @@ FORMAT = ihex
 
 
 # Target file name (without extension).
-TARGET = main
+TARGET = src/main
 
 
 # Optimization level, can be [0, 1, 2, 3, s]. 0 turns off optimization.
@@ -53,13 +53,12 @@ SRC = $(TARGET).c
 
 # If there is more than one source file, append them above, or modify and
 # uncomment the following:
-SRC += main.c
-SRC += adc.c
-SRC += global.c
-SRC += serial.c
-SRC += control.c
-SRC += init.c
-SRC += helper.c
+SRC += src/adc.c
+SRC += src/global.c
+SRC += src/serial.c
+SRC += src/control.c
+SRC += src/init.c
+SRC += src/helper.c
 
 
 
@@ -160,7 +159,7 @@ LDFLAGS = -Wl,-Map=$(TARGET).map,--cref
 AVRDUDE_PROGRAMMER = avrisp
 
 
-AVRDUDE_PORT = COM9	   # programmer connected to serial device
+AVRDUDE_PORT = COM50	   # programmer connected to serial device
 #AVRDUDE_PORT = lpt1	# programmer connected to parallel port
 
 AVRDUDE_WRITE_FLASH = -U flash:w:$(TARGET).hex
@@ -178,7 +177,7 @@ AVRDUDE_FLAGS += -b 19200
 
 # Uncomment the following if you do /not/ wish a verification to be
 # performed after programming the device.
-AVRDUDE_FLAGS += -V
+# AVRDUDE_FLAGS += -V
 
 # Increase verbosity level.  Please use this when submitting bug
 # reports about avrdude. See <http://savannah.nongnu.org/projects/avrdude>
