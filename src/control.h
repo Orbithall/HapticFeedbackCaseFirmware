@@ -5,7 +5,7 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
-#include "cpu.h"
+
 #include <stdio.h>
 
 #define CONTROL_PIN_XYZ_ADC_INPUT 		  0b00000111   // for row data 

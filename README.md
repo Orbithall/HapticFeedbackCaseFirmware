@@ -18,11 +18,14 @@ make program
 
 ## TODO List:
 - [x] fix headers and includes to make new makefile compile the code
-- [x] put output data into bin (implement this), source data into src (done)
+- [x] put source data into src folder
 - [ ] add rx to change between 1 sensor and all sensors on tx, & to turn all sensors off (new state in FSM + boolean for each sensor, if true for sensor n, then tx)
 - [ ] test rx with computer terminal 
 - [ ] Add varying sleep states i.e. when all sensors are off sleep
-- [ ] Android App: adapt app 
+> When all sensors are off, 
+> - manually 0 V all ouptus to uC and float all inputs (except TX RX) 
+> - decrease the clock (don't brick your hardware ben)
+- [ ] Android App: adapt app to send these RX signals for mode and power selection
 - [ ] Android App: refactor app 
 - [ ] Android App: look into making a service
 

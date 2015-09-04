@@ -32,4 +32,7 @@
 *.dSYM/
 
 #Backup folder
-Backup/*
+backup/*
+
+*.dep/
+bin../*
