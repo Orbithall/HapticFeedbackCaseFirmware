@@ -25,9 +25,6 @@ make program
 > When all sensors are off, 
 > - manually 0 V all ouptus to uC and float all inputs (except TX RX) 
 > - decrease the clock (don't brick your hardware ben)
-- [ ] Android App: adapt app to send these RX signals for mode and power selection
-- [ ] Android App: refactor app 
-- [ ] Android App: look into making a service
 
 ## License 
 
