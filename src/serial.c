@@ -27,7 +27,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <string.h>
 #include <stdio.h>
 #include "serial.h"
-#include "main.h"
 
 volatile struct SerialData SerialData0;
 
@@ -115,7 +114,7 @@ void serialUART_Init (void) {
 	buffer_clear(&SerialData0.tx);
 	UCSR0B = (1 << RXCIE0) | (1 << RXEN0) | (1 << TXEN0); //Turn on the tx and rx hardware
 
-	//8-bit char sizes, URSEL bit set to select the UCRSC register
+	//8-bit char sizes
 	UCSR0C = (1 << UCSZ00) | (1 << UCSZ01); 
 
 	//load upper 8 bits of the baud rate value into the high byte of the UBRR register 

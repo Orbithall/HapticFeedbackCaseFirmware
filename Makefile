@@ -87,6 +87,7 @@ SRC += src/serial.c
 SRC += src/control.c
 SRC += src/init.c
 SRC += src/helper.c
+SRC += src/sleep.c
 
 # List C++ source files here. (C dependencies are automatically generated.)
 CPPSRC = 

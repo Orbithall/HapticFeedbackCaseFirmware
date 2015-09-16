@@ -27,5 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 void helperDigitalWrite(volatile uint8_t *, uint8_t, uint8_t );
 void helperSetDir(volatile uint8_t *, uint8_t, uint8_t );
+void helperRetrieveSensor(uint8_t);
+
 
 #endif

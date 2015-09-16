@@ -19,69 +19,50 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 #include <avr/io.h>
+#include "sleep.h"
 #include <stdio.h>
 #include "serial.h"
 #include "global.h"
 #include "init.h"
 #include "control.h"
+#include "helper.h"
+#include <stdio.h>
 
 #define MAIN_PACKET_END_BYTE           0xFF
 
-static void mainSleepSystem(void);
-static void mainRetrieveSensor(uint8_t sensorID);
-
-static uint8_t sensor = 0;
+uint8_t sensor = 0;
 static uint8_t input = 31; // as debug, initalise to output all sensors until i adapt the android app
-static uint8_t firstOffRx = 1; 
+static uint8_t prevInput;
 
-static void mainRetrieveSensor(uint8_t sensorID) {
-	switch (sensorID) {
-		case 0b00000001 : 
-			sensor = 0;  
-			controlGetStrip(&sensor);
-			break;
-		case 0b00000010 :
-			sensor = 1;  
-			controlGetStrip(&sensor);
-			break;
-		case 0b00000100 : 
-			sensor = 2; 
-			controlGetStrip(&sensor);
-			break;
-		case 0b00001000 : 
-			sensor = 3;  
-			controlGetStrip(&sensor);		
-			break;
-		case 0b00010000 : 
-			controlPadInput();
-			break;
-		default : 
-			mainSleepSystem();
-	}
-}
-
-static void mainSleepSystem(void) {
-	uart0_fputchar_int(6,&uart_str); // sleep state may hold here until uart interrupt ! 
-	uart0_fputchar_int(9,&uart_str);
-	firstOffRx = 0; 
-}
 
 int main(void) {
 	initStartup();
 	while (1) {	
-		if (!buffer_isempty(&SerialData0.rx)) //if you've received some input then save it to the input
-			input = uart0_fgetchar_int(&uart_str);
-		if (input != 0) {	// if the hosts requests a readout 
-			uart0_fputchar_int(MAIN_PACKET_END_BYTE,&uart_str); //send the start packet id 
-			for (int i = 0; i < 5; i++) {  // rx all requested sensors
-				uint8_t tempInput = input & (0b00000001 << i);
-				if (tempInput != 0) 
-					mainRetrieveSensor(tempInput);
-			}
-			if (firstOffRx == 0) // if we haven't already set this high then do so
-				firstOffRx = 1; 
-		} else if (firstOffRx == 1)  // sleep here once and only once
-			mainSleepSystem();
+		if (!buffer_isempty(&SerialData0.rx)) { //if you've received some input then save it to the input
+			if (uart0_peek_int() != input) {
+				prevInput = input; 
+				input = uart0_fgetchar_int(&uart_str);
+				uart0_fputchar_int(input,&uart_str); // the host will use this echo response to assert the client is returning the desired sensor
+			} else 
+				buffer_get(&SerialData0.rx);
+		}
+		if (prevInput != input) {
+			if (input != 0) {	// if the hosts requests a readout 
+				if ((input & 0b00001000) == 0) //if you've not requested the rear pad then disable mux and it's decoder input
+					PORTL = 0x00; 
+				if (firstOffRx == 0) // if you were in sleep then get out ()might need to change this 
+					sleepSystemWake();
+					firstOffRx = 1; 
+				uart0_fputchar_int(MAIN_PACKET_END_BYTE,&uart_str); //send the start packet id 
+				for (int i = 0; i < 5; i++) {  // rx all requested sensors
+					uint8_t tempInput = (input & (0b00000001 << i));
+					if (tempInput != 0) 
+						helperRetrieveSensor(tempInput);
+				}
+			} else if (firstOffRx == 1)  // sleep here once and only once
+				sleepSystem();
+		}
 	}
 	return 0;
 }
+

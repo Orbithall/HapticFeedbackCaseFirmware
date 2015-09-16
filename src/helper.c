@@ -22,6 +22,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include "helper.h"
 #include <avr/io.h>
+#include "control.h"
+#include "sleep.h"
+#include "main.h"
+#include <stdio.h>
 
 void helperDigitalWrite(volatile uint8_t *port, uint8_t pin, uint8_t logic) { //port, pin, logic
 	if (logic == 1) { //set high!
@@ -36,5 +40,31 @@ void helperSetDir(volatile uint8_t *port, uint8_t pin, uint8_t logic) {
 		*port |= (1<<pin);
 		} else { // if intended input, write 0 
 		*port &= ~(1<<pin); //output 
+	}
+}
+
+void helperRetrieveSensor(uint8_t sensorID) {
+	switch (sensorID) {
+		case 0b00000001 : 
+			sensor = 0;  
+			controlGetStrip(&sensor);
+			break;
+		case 0b00000010 :
+			sensor = 1;  
+			controlGetStrip(&sensor);
+			break;
+		case 0b00000100 : 
+			sensor = 2; 
+			controlGetStrip(&sensor);
+			break;
+		case 0b00001000 : 
+			sensor = 3;  
+			controlGetStrip(&sensor);		
+			break;
+		case 0b00010000 : 
+			controlPadInput();
+			break;
+		default : 
+			sleepSystem();
 	}
 }

@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "serial.h"
 #include "helper.h"
 #include <avr/io.h>
+#include <avr/power.h>
 #include <stdio.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
@@ -35,18 +36,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #define INIT_PORTL_DIR 0xFF //setup row 1 on the mux by select 0000, en = 1, 
 #define INIT_PORTL     0x00	//set led low, and for test, selectors low and enable low 
 
-static void initPorts(void);
+
 static void initLed(void);
 static void initPrescaler(void);
 static void initADC(void);
 
-static void initPorts(void){
-	DDRL = INIT_PORTL_DIR; 
-	PORTL = INIT_PORTL; 
-	DDRF = INIT_PORTF_DIR; 
-	DDRK = INIT_PORTK_DIR;  
+void initPorts(void){
 	DDRA = INIT_PORTA_DIR;
 	DDRC = INIT_PORTC_DIR;
+	DDRF = INIT_PORTF_DIR; 
+	DDRK = INIT_PORTK_DIR;  
+	DDRL = INIT_PORTL_DIR; 
+	PORTL = INIT_PORTL; 
 }
 
 static void initLed(void){
@@ -71,6 +72,17 @@ void initStartup(void){
 	cli();          	// disable all interrupts
 	//flash LED and wait a second
 	initLed();
+
+	power_usart1_disable();
+	power_usart2_disable();
+	power_usart3_disable();
+	power_timer0_disable();
+	power_timer1_disable();	
+	power_timer2_disable();
+	power_timer3_disable();
+	power_timer4_disable();
+	power_timer5_disable();
+	power_twi_disable();
 
 	// Port initialization
 	initPorts();
