@@ -1,5 +1,8 @@
 /*
-   Copyright (C) 2009:
+Haptic Feedback Case 
+Copyright (C) 2015:
+         Ben Kazemi, ebaykazemi@googlemail.com
+Copyright (C) 2009:
          Daniel Roggen, droggen@gmail.com
 
 
@@ -23,7 +26,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <stdio.h>
 
-volatile struct SerialData SerialData0;
 #define SERIAL_BUFFERSIZE 64
 #define SERIAL_BUFFERSIZE_MASK (SERIAL_BUFFERSIZE-1)
 
@@ -45,8 +47,6 @@ unsigned char buffer_isempty(volatile struct BUFFEREDIO *io);
 void buffer_clear(volatile struct BUFFEREDIO *io);
 unsigned char buffer_isfull(volatile struct BUFFEREDIO *io);
 unsigned char buffer_level(volatile struct BUFFEREDIO *io);
-
-
 
 /******************************************************************************
 *******************************************************************************
@@ -70,48 +70,32 @@ struct SerialData
 extern unsigned char  (*uart0_rx_callback)(unsigned char);
 extern unsigned char  (*uart1_rx_callback)(unsigned char);
 
-
 extern volatile struct SerialData SerialData0;
-extern volatile struct SerialData SerialData1;
 
-int uart0_init(unsigned int ubrr, unsigned char u2x);
-int uart1_init(unsigned int ubrr, unsigned char u2x);
+void serialUART_Init(void);
 void uart_setblocking(FILE *file,unsigned char blocking);
 
 /*
 	Direct serial access
 */
-int uart0_fputchar(char ch,FILE* stream);
-int uart0_fgetchar(FILE *stream);
-int uart0_putchar(char ch);
-int uart0_getchar(void);
-
-int uart1_fputchar(char ch,FILE* stream);
-int uart1_fgetchar(FILE *stream);
-int uart1_putchar(char ch);
-int uart1_getchar(void);
-
+void serialUART0PutChar(uint8_t);
+uint8_t serialUART0GetChar(void);
 
 /*
 	Interrupt-driven serial access
 */
 int uart0_fputchar_int(char c, FILE*stream);
-int uart1_fputchar_int(char c, FILE*stream);
 int uart0_fgetchar_nonblock_int(FILE *stream);
-int uart1_fgetchar_nonblock_int(FILE *stream);
 int uart0_fgetchar_int(FILE *stream);
-int uart1_fgetchar_int(FILE *stream);
 
 unsigned char uart0_ischar_int(void);
-unsigned char uart1_ischar_int(void);
+
 unsigned char uart0_txbufferfree(void);
-unsigned char uart1_txbufferfree(void);
+
 int uart0_peek_int(void);
-int uart1_peek_int(void);
+
 void uart0_ungetch_int(unsigned char c);
-void uart1_ungetch_int(unsigned char c);
+
 void flush(FILE *f);
-
-
 
 #endif

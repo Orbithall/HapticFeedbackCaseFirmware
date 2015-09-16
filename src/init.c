@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+#include <avr/io.h>
+
 
 #include "init.h"
 #include "serial.h"
@@ -39,14 +41,12 @@ static void initPrescaler(void);
 static void initADC(void);
 
 static void initPorts(void){
-	cli();          	// disable all interrupts
 	DDRL = INIT_PORTL_DIR; 
 	PORTL = INIT_PORTL; 
 	DDRF = INIT_PORTF_DIR; 
 	DDRK = INIT_PORTK_DIR;  
 	DDRA = INIT_PORTA_DIR;
 	DDRC = INIT_PORTC_DIR;
-	sei();				// enable all interrupts
 }
 
 static void initLed(void){
@@ -68,6 +68,7 @@ static void initADC(void){
 }
 
 void initStartup(void){
+	cli();          	// disable all interrupts
 	//flash LED and wait a second
 	initLed();
 
@@ -81,5 +82,6 @@ void initStartup(void){
 	initADC();
 
 	// comm setup
-	uart0_init(1,0);  // Asyn,NoParity,1StopBit,8Bit,  -- baud rate: 230.4k u2xn = 1 
+	serialUART_Init();  // Asyn,NoParity,1StopBit,8Bit,  -- baud rate: 230.4k u2xn = 0
+	sei();				// enable all interrupts
 }

@@ -27,9 +27,14 @@
 *.i*86
 *.x86_64
 *.hex
+*.lst
+*.lss
+*.map
+
 
 # Debug files
 *.dSYM/
+*.sym
 
 #Backup folder
 backup/*
