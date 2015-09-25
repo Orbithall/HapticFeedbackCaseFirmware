@@ -25,6 +25,7 @@ make program
 - [x] add rx to implement sensor selection on tx, & to turn all sensors off
 - [x] related to above point: have a boolean for each sensor, initialises to 0. host sends value that determines (bits of a  byte) what sensors to activate. main.c cycles this byte - you can determine what sensors you're reading since you know the initial value, and from there, the host takes control of the byte
 - [x] echo back a sensor state change ONLY IF IT'S CHANGED on the rx and assert it's the same as the hosts Tx, else host receives an illegal number to signify a false reading, return error message and try again 
+> this is taken out since it's been deemed unnecessary considering the data will be travelling through a wired medium 
 - [x] test rx with computer terminal 
 - [x] Add sleep states at off state 
 - [x] When all sensors are off then disable adc spi & timers 

@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdio.h>
+#include "helper.h"
 
 uint8_t firstOffRx = 1; 
 
@@ -47,12 +48,14 @@ void sleepSystem(void) {
 	PORTL = MAIN_PORTL_OUTPUT_LOW; 
 	cli();
 	power_adc_disable();
-	power_spi_disable();
+	// power_spi_disable();  //FOR DEBUGGING
 	UBRR0H = (MAIN_BAUD_PRESCALE_DURING_SLEEP >> 8); // set the baud rate to be 14400  
 	UBRR0L = MAIN_BAUD_PRESCALE_DURING_SLEEP;
 	clock_prescale_set(clock_div_32); //SHOULD MATCH MAIN_CPU_PRESCALER_DURING_SLEEP
 	sei();
 	//sleeping here
+		helperSetDir(&DDRL, 6, 0); 
+	helperDigitalWrite(&PORTL, 6, 1); //turn debug LED on  
 	set_sleep_mode(SLEEP_MODE_IDLE);
 	sleep_enable();
 	//wait for Rx and Tx to finish before sleeping ! 

@@ -26,7 +26,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "init.h"
 #include "control.h"
 #include "helper.h"
-#include <stdio.h>
 
 #define MAIN_PACKET_END_BYTE           0xFF
 
@@ -42,7 +41,6 @@ int main(void) {
 			if (uart0_peek_int() != input) {
 				prevInput = input; 
 				input = uart0_fgetchar_int(&uart_str);
-				uart0_fputchar_int(input,&uart_str); // the host will use this echo response to assert the client is returning the desired sensor
 			} else 
 				buffer_get(&SerialData0.rx);
 		}
