@@ -50,6 +50,20 @@ void initPorts(void){
 	PORTL = INIT_PORTL; 
 }
 
+#define MAIN_PORT_DIR 0xFF
+#define MAIN_PORT_OUPUT_LOW 0x00
+#define MAIN_PORTL_OUTPUT_LOW 0x10
+void initSleepPorts(void) {
+	PORTA = MAIN_PORT_OUPUT_LOW;
+	PORTC = MAIN_PORT_OUPUT_LOW;
+	DDRF = MAIN_PORT_DIR; 
+	PORTF = MAIN_PORT_OUPUT_LOW;
+	DDRK = MAIN_PORT_DIR;  
+	PORTK = MAIN_PORT_OUPUT_LOW;
+	DDRL = MAIN_PORT_DIR; 
+	PORTL = MAIN_PORTL_OUTPUT_LOW; 
+}
+
 static void initLed(void){
 	helperSetDir(&DDRL, 6, 0); //avoid MS legacy ballpoint drivers  
 	helperDigitalWrite(&PORTL, 6, 1); //turn debug LED on  
@@ -73,7 +87,7 @@ void initStartup(void){
 	//flash LED and wait a second
 	initLed();
 
-	power_usart1_disable();
+	power_usart1_disable(); //not doing spi until last change and know this is perfect
 	power_usart2_disable();
 	power_usart3_disable();
 	power_timer0_disable();
@@ -85,7 +99,7 @@ void initStartup(void){
 	power_twi_disable();
 
 	// Port initialization
-	initPorts();
+	initSleepPorts();
 
 	// Init the prescaler division factor to 64, a sample rate of 115 KHz
 	initPrescaler();

@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 extern uint8_t firstOffRx;
 
-void sleepSystemWake(void);
 void sleepSystem(void);
+void sleepSystemWake(void);
 
 #endif

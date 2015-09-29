@@ -29,23 +29,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 uint8_t firstOffRx = 1; 
 
-#define MAIN_PORT_DIR 0xFF
-#define MAIN_PORT_OUPUT_LOW 0x00
-#define MAIN_PORTL_OUTPUT_LOW 0x10
+
 #define MAIN_CPU_PRESCALER_DURING_SLEEP 32
 #define MAIN_USART_BAUDRATE_LOW_POWER 14400
 #define MAIN_BAUD_PRESCALE_DURING_SLEEP (((((F_CPU / MAIN_CPU_PRESCALER_DURING_SLEEP) / 16) + (MAIN_USART_BAUDRATE_LOW_POWER / 2)) / (MAIN_USART_BAUDRATE_LOW_POWER)) - 1)
 
 void sleepSystem(void) {
 	firstOffRx = 0; 
-	PORTA = MAIN_PORT_OUPUT_LOW;
-	PORTC = MAIN_PORT_OUPUT_LOW;
-	DDRF = MAIN_PORT_DIR; 
-	PORTF = MAIN_PORT_OUPUT_LOW;
-	DDRK = MAIN_PORT_DIR;  
-	PORTK = MAIN_PORT_OUPUT_LOW;
-	DDRL = MAIN_PORT_DIR; 
-	PORTL = MAIN_PORTL_OUTPUT_LOW; 
+	initSleepPorts();
 	cli();
 	power_adc_disable();
 	// power_spi_disable();  //FOR DEBUGGING
@@ -54,7 +45,7 @@ void sleepSystem(void) {
 	clock_prescale_set(clock_div_32); //SHOULD MATCH MAIN_CPU_PRESCALER_DURING_SLEEP
 	sei();
 	//sleeping here
-		helperSetDir(&DDRL, 6, 0); 
+	helperSetDir(&DDRL, 6, 0); 
 	helperDigitalWrite(&PORTL, 6, 1); //turn debug LED on  
 	set_sleep_mode(SLEEP_MODE_IDLE);
 	sleep_enable();
@@ -63,6 +54,8 @@ void sleepSystem(void) {
 	sleep_mode();
 	//wakes up here from IDLE sleep 
 	sleep_disable();
+
+
 }
 
 void sleepSystemWake(void) {

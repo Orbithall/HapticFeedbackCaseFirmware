@@ -33,24 +33,25 @@ uint8_t sensor = 0;
 static uint8_t input = 31; // as debug, initalise to output all sensors until i adapt the android app
 static uint8_t prevInput;
 
-
 int main(void) {
 	initStartup();
+	buffer_put(&SerialData0.rx, 0); // sleep this! 
 	while (1) {	
 		if (!buffer_isempty(&SerialData0.rx)) { //if you've received some input then save it to the input
 			if (uart0_peek_int() != input) {
 				prevInput = input; 
 				input = uart0_fgetchar_int(&uart_str);
 			} else 
-				buffer_get(&SerialData0.rx);
+				buffer_get(&SerialData0.rx); // remove from buffer! 
 		}
 		if (prevInput != input) {
 			if (input != 0) {	// if the hosts requests a readout 
 				if ((input & 0b00001000) == 0) //if you've not requested the rear pad then disable mux and it's decoder input
 					PORTL = 0x00; 
-				if (firstOffRx == 0) // if you were in sleep then get out ()might need to change this 
+				if (firstOffRx == 0) {// if you were in sleep then get out ()might need to change this 
 					sleepSystemWake();
-					firstOffRx = 1; 
+					firstOffRx = 1;
+				} 
 				uart0_fputchar_int(MAIN_PACKET_END_BYTE,&uart_str); //send the start packet id 
 				for (int i = 0; i < 5; i++) {  // rx all requested sensors
 					uint8_t tempInput = (input & (0b00000001 << i));
