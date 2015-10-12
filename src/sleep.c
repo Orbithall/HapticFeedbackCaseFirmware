@@ -30,8 +30,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 uint8_t firstOffRx = 1; 
 
 
-#define MAIN_CPU_PRESCALER_DURING_SLEEP 32
-#define MAIN_USART_BAUDRATE_LOW_POWER 14400
+#define MAIN_CPU_PRESCALER_DURING_SLEEP 16
+#define MAIN_USART_BAUDRATE_LOW_POWER 9600
 #define MAIN_BAUD_PRESCALE_DURING_SLEEP (((((F_CPU / MAIN_CPU_PRESCALER_DURING_SLEEP) / 16) + (MAIN_USART_BAUDRATE_LOW_POWER / 2)) / (MAIN_USART_BAUDRATE_LOW_POWER)) - 1)
 
 void sleepSystem(void) {
@@ -42,7 +42,7 @@ void sleepSystem(void) {
 	// power_spi_disable();  //FOR DEBUGGING
 	UBRR0H = (MAIN_BAUD_PRESCALE_DURING_SLEEP >> 8); // set the baud rate to be 14400  
 	UBRR0L = MAIN_BAUD_PRESCALE_DURING_SLEEP;
-	clock_prescale_set(clock_div_32); //SHOULD MATCH MAIN_CPU_PRESCALER_DURING_SLEEP
+	clock_prescale_set(clock_div_16); //SHOULD MATCH MAIN_CPU_PRESCALER_DURING_SLEEP
 	sei();
 	//sleeping here
 	helperSetDir(&DDRL, 6, 0); 

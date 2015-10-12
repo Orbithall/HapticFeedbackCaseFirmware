@@ -30,7 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 volatile struct SerialData SerialData0;
 
-#define SERIAL_USART_BAUDRATE 230400
+#define SERIAL_USART_BAUDRATE 115200
 #define SERIAL_BAUD_PRESCALE ((((F_CPU / 16) + (SERIAL_USART_BAUDRATE / 2)) / (SERIAL_USART_BAUDRATE)) - 1)
 
 /******************************************************************************
@@ -202,7 +202,7 @@ ISR(USART0_UDRE_vect)
 */
 ISR(USART0_RX_vect) //in the function that deals with received data, we want to check if the .rx buffer is empty 
 {
-	unsigned char c=UDR0;
+	unsigned char c=UDR0 ;
 	if(uart0_rx_callback==0 || (*uart0_rx_callback)(c)==1)
 		buffer_put(&SerialData0.rx,c);
 
