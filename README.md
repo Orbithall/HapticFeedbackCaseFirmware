@@ -1,5 +1,5 @@
 ## Haptic Feedback Case: The Firmware
-![alt text](https://imgur.com/NIQDIgh)
+![alt text](https://i.imgur.com/NIQDIgh.jpg)
 
 > The haptic feedback case is a shell that attaches to most modern android phones, it interfaces the user through positional and pressure input on the sides and rear of their device.   
 
