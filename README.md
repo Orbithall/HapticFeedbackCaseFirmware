@@ -1,4 +1,6 @@
 ## Haptic Feedback Case: The Firmware
+![alt text]([http://url/to/img.png](https://imgur.com/NIQDIgh))
+
 > The haptic feedback case is a shell that attaches to most modern android phones, it interfaces the user through positional and pressure input on the sides and rear of their device.   
 
 > This firmware is to be programmed to the rev.10 board designed and developed by Ben Kazemi. 
